@@ -27,35 +27,33 @@ int main(){
 		perror("socket");
 		exit(1);
 	}
-	addr1.sun_family = AF_LOCAL;
-	snprintf(addr.sun_path, sizeof(addr.sun_path)-1, "%s", name);
-
-	addr1.sun_family = AF_LOCAL;
-	snprintf(addr.sun_path, sizeof(addr.sun_path)-1, "%s", name1);
+	addr.sun_family = AF_LOCAL;
+	snprintf(addr.sun_path, sizeof(addr.sun_path), "%s", name);
+	unlink(name);
 	size_addr = sizeof(addr.sun_family)+strlen(addr.sun_path);
 	if (bind(sock, (struct sockaddr *)&addr, size_addr) < 0){
 		perror("bind");
 		exit(1);
 	}
-	if(sendto(sock, buf, strlen(buf), 0, (struct sockaddr *)&addr, sizeof(addr)) < 0){
-		perror("sendto");
-		exit(1);
-	}
-	printf("Sended complite\n\n");
 
 	printf("Waiting for a message:\n");
 
-	size_addr = sizeof(addr1.sun_family)+strlen(addr1.sun_path);
-	if (bind(sock1, (struct sockaddr *)&addr1, size_addr) < 0){
-		perror("bind");
-		exit(1);
-	}
-	if(recvfrom(sock, buf_recv, 25, 0, (struct sockaddr *)&addr, size) < 0){
+	if(recvfrom(sock, (void *)buf_recv, 25, 0, (struct sockaddr *)&addr, size) < 0){
 		perror("recvfrom");
 		exit(1);
 	}
 
-	printf("%s\n", buf_recv);
+	printf("%s\n", (char *)buf_recv);
+
+	addr1.sun_family = AF_LOCAL;
+	snprintf(addr1.sun_path, sizeof(addr1.sun_path), "%s", name1);
+
+	if(sendto(sock, buf, strlen(buf), 0, (struct sockaddr *)&addr1, size_addr) < 0){
+		perror("sendto");
+		exit(1);
+	}
+
+	printf("Sended complite\n\n");
 
 	exit(0);
 }
