@@ -10,8 +10,6 @@
 #include <string.h>
 
 
-#define SOCKET_ADDR "soket.socket"
-
 
 int main(){
 
