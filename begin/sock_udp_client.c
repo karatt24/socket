@@ -23,20 +23,21 @@ int main(){
 	buf_recv = malloc(25);
 	sock = socket(AF_LOCAL, SOCK_DGRAM, 0);
 	sock1 = socket(AF_LOCAL, SOCK_DGRAM, 0);
-	if(sock < 0){
+	if(sock1 < 0){
 		perror("socket");
 		exit(1);
 	}
-	addr1.sun_family = AF_LOCAL;
+	addr.sun_family = AF_LOCAL;
 	snprintf(addr.sun_path, sizeof(addr.sun_path)-1, "%s", name);
 
 	addr1.sun_family = AF_LOCAL;
-	snprintf(addr.sun_path, sizeof(addr.sun_path)-1, "%s", name1);
+	snprintf(addr1.sun_path, sizeof(addr1.sun_path)-1, "%s", name1);
 	size_addr = sizeof(addr.sun_family)+strlen(addr.sun_path);
 	if (bind(sock, (struct sockaddr *)&addr, size_addr) < 0){
 		perror("bind");
 		exit(1);
 	}
+
 	if(sendto(sock, buf, strlen(buf), 0, (struct sockaddr *)&addr, sizeof(addr)) < 0){
 		perror("sendto");
 		exit(1);
@@ -50,7 +51,7 @@ int main(){
 		perror("bind");
 		exit(1);
 	}
-	if(recvfrom(sock, buf_recv, 25, 0, (struct sockaddr *)&addr, size) < 0){
+	if(recvfrom(sock1, buf_recv, 25, 0, (struct sockaddr *)&addr1, size) < 0){
 		perror("recvfrom");
 		exit(1);
 	}

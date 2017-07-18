@@ -38,7 +38,6 @@ int queue(int m, int n){
 
 void vremya(int *fd){
 
-	int i;
 	time_t timp;
 	char *tim;
 	struct msgreq *req;
@@ -64,8 +63,7 @@ void vremya(int *fd){
 
 int main(){
 
-	pid_t pid;
-	int i, sock, *fd, err, err1;
+	int sock, *fd, err, err1;
 	pthread_t tid;
 	char buf[1024];
 	struct msgreq *request;
@@ -74,7 +72,7 @@ int main(){
 	request = malloc(sizeof(struct msgreq));
 	response = malloc(sizeof(struct msgresp));
 	fd = malloc(sizeof(int)*2);
-
+	memset(&client, 0, sizeof(struct sockaddr_in));
 	fd[0] = queue('m', 0);
 	fd[1] = queue('n', 0);
 
@@ -118,6 +116,12 @@ int main(){
 			perror("recvfrom");
 			exit(1);
 		}
+	/*	printf("Запрос принят: %s\n", buf);
+		snprintf(buf, 256, "Answer...time po pozshe)");
+		if(sendto(sock, buf, 256, 0, (struct sockaddr *)&client, sizeof(client)) < 0){
+					perror("sendto");
+					exit(1);
+				}*/
 		request->mtype = 1L;
 		snprintf(request->message, 256, "%s", buf);
 		request->client = client;
